@@ -1,6 +1,7 @@
 create database Ecommerce;
 use Ecommerce;
 
+-- Question no 1 Create tables
 create table Supplier(
 Supp_ID int primary key,
 Supp_Name varchar(25),
@@ -57,7 +58,7 @@ FOREIGN KEY (Cus_ID) REFERENCES Customer(Cus_ID),
 FOREIGN KEY (Supp_ID) REFERENCES Supplier(Supp_ID));
 
 show tables;
-
+-- 2. insert the  data in the table created above 
 insert into supplier values(1, "Rajesh Retails", "Delhi", 1234567890);
 insert into supplier values(2, "Appario Ltd.", "Mumbai", 2589631470);
 insert into supplier values(3, "Knome products", "Banglore", 9785462315);
@@ -100,19 +101,25 @@ insert into  Rating values(3, 5, 1, 5);
 insert into  Rating values(4, 1, 3, 2);
 insert into  Rating values(5, 4, 5, 4);
 
+use ecommerce;
 
+-- 3. "Display the number of the customer group by their genders who have placed any order 
+-- of amount greater than or equal to Rs.3000."
 select cus_gender, count(*) as count 
 from customer  as c inner join orders as o 
 on c.cus_id = o.cus_id 
 where o.ord_amount >= 3000 
 group by (c.cus_gender);
 
+-- 4.  Display all the orders along with the product name ordered by a customer having 
+-- Customer_Id=2.
 select o.*, p.pro_name 
 from orders o, product p, productdetails pd 
 where o.cus_id = 2 
 and pd.prod_id = o.prod_id 
 and pd.pro_id= p.pro_id;
 
+-- 5.  Display the Supplier details who can supply more than one produc
 select s.* 
 from supplier s, productdetails pd 
 where s.supp_id 
@@ -123,6 +130,7 @@ group by pd.supp_id
 having count(pd.pro_id)>1) 
 group by s.supp_id;
 
+-- 6. Find the category of the product whose order amount is minimum
 select c.* 
 from category c, productdetails pd, product p, orders o
 where pd.prod_id = o.prod_id 
@@ -130,18 +138,21 @@ and pd.pro_id = p.pro_id
 and p.cat_id = c.cat_id
 having min(o.ord_amount);
 
+-- 7. Display the Id and Name of the Product ordered after “2021-10-05”
 select p.pro_id, p.pro_name 
 from product p, orders o,productdetails pd
 where o.prod_id = pd.prod_id 
 and pd.pro_id = p.pro_id
 and o.ord_date > '2021-10-05';
 
+-- 8. Display customer name and gender whose names start or end with character 'A
 select c.cus_name, c.cus_gender 
 from customer c
 where upper(c.cus_name)
 like '%A'
 or upper(c.cus_name) like 'A%';
 
+-- 9. Create a stored procedure to display the Rating for a Supplier
 DELIMITER &&
 create procedure myproc()
 begin
